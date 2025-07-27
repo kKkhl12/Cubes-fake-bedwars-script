@@ -1,0 +1,18 @@
+{
+  "manifest_version": 3,
+  "name": "Pekora Enhanced",
+  "version": "1.0",
+  "description": "Enhance pekora with custom backgrounds, dark mode, favorites, and more.",
+  "content_scripts": [
+    {
+      "matches": [
+        "https://www.pekora.zip/*"
+      ],
+      "exclude_matches": [
+        "https://www.pekora.zip/auth*"
+      ],
+      "js": ["content.js"],
+      "css": ["styles.css"]
+    }
+  ]
+}
