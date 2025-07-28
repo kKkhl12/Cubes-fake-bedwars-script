@@ -1,6 +1,9 @@
+/* --- Pekora Extension CSS --- */
+
+/* Background image (user custom) */
 #pekora-bg-img {
   position: fixed !important;
-  z-index: 0 !important;
+  z-index: -2 !important;
   top: 0; left: 0; width: 100vw; height: 100vh;
   background: none;
   background-size: cover;
@@ -16,9 +19,10 @@
   display: block !important;
 }
 
+/* Background blur overlay */
 #pekora-bg-blur {
   position: fixed !important;
-  z-index: 1 !important;
+  z-index: -1 !important;
   top: 0; left: 0; width: 100vw; height: 100vh;
   pointer-events: none;
   background: transparent;
@@ -34,6 +38,7 @@
   display: block !important;
 }
 
+/* Snow effect canvas */
 #pekora-snow-canvas {
   position: fixed;
   z-index: 2 !important;
@@ -48,9 +53,10 @@
   display: block;
 }
 
+/* Blur overlay (when menu open) */
 #pekora-blur-overlay {
   position: fixed;
-  z-index: 3 !important;
+  z-index: 9998 !important;
   top: 0; left: 0; width: 100vw; height: 100vh;
   background: rgba(255,255,255,0.1);
   backdrop-filter: blur(8px) brightness(0.9);
@@ -65,9 +71,10 @@
   display: block;
 }
 
+/* Menu and toggle button always on top */
 .pekora-extension-menu {
   position: fixed;
-  z-index: 9999 !important;
+  z-index: 99999 !important;
   top: 0; left: 0; right: 0; bottom: 0;
   display: none;
   align-items: center;
@@ -189,7 +196,7 @@
   position: fixed;
   bottom: 24px;
   right: 24px;
-  z-index: 10000 !important;
+  z-index: 100000 !important;
   background: #ffb6c1;
   color: #333;
   border: none;
