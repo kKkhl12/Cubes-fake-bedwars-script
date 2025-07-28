@@ -235,8 +235,7 @@ menu.addEventListener('click', function(e) {
         } else {
           window.open('https://www.pekora.zip/games', '_blank');
         }
-      })
-      .catch(() => window.open('https://www.pekora.zip/games', '_blank'));
+      })      .catch(() => window.open('https://www.pekora.zip/games', '_blank'));
   }
   if (e.target && e.target.id === 'pekora-top-btn') {
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -375,84 +374,120 @@ function loadGameTools() {
 }
 
 const themePresets = {
-  classic: {
-    url: '',
-    blur: 0,
-    opacity: 100
-  },
-  night: {
-    url: '',
-    blur: 8,
-    opacity: 80
-  },
-  pekora: {
-    url: 'https://cdn.discordapp.com/attachments/112222222222222222/112222222222222222/pekora-blue-bg.png', 
-    blur: 6,
-    opacity: 70
-  }
+  classic: { url: '', blur: 0, opacity: 100 },
+  night: { url: '', blur: 8, opacity: 80 },
+  pekora: { url: 'https://cdn.discordapp.com/attachments/112222222222222222/112222222222222222/pekora-blue-bg.png', blur: 6, opacity: 70 }
 };
-document.getElementById('pekora-bg-theme').addEventListener('change', function() {
-  const val = this.value;
-  if (themePresets[val]) {
-    document.getElementById('pekora-bg-url').value = themePresets[val].url;
-    document.getElementById('pekora-bg-blur').value = themePresets[val].blur;
-    document.getElementById('pekora-bg-blur-val').innerText = themePresets[val].blur;
-    document.getElementById('pekora-bg-opacity').value = themePresets[val].opacity;
-    document.getElementById('pekora-bg-opacity-val').innerText = themePresets[val].opacity;
-  }
-});
 
 function setCustomBackground(url, blur, opacity) {
-  bgImgDiv.style.backgroundImage = url ? `url('${url}')` : 'none';
-  bgImgDiv.style.opacity = opacity / 100;
-  bgImgDiv.style.display = url ? 'block' : 'none';
-  bgBlurDiv.style.backdropFilter = `blur(${blur}px)`;
-  bgBlurDiv.style.webkitBackdropFilter = `blur(${blur}px)`;
-  bgBlurDiv.style.opacity = blur > 0 ? 1 : 0;
-  bgBlurDiv.style.display = blur > 0 ? 'block' : 'none';
+  blur = Number(blur);
+  opacity = Number(opacity);
+
+  if (url) {
+
+    bgImgDiv.style.backgroundImage = `url('${url}')`;
+    bgImgDiv.style.opacity = opacity / 100;
+    bgImgDiv.classList.add('active');
+
+    bgBlurDiv.style.backdropFilter = `blur(${blur}px)`;
+    bgBlurDiv.style.webkitBackdropFilter = `blur(${blur}px)`;
+    if (blur > 0) {
+      bgBlurDiv.classList.add('active');
+    } else {
+      bgBlurDiv.classList.remove('active');
+    }
+  } else {
+
+    bgImgDiv.classList.remove('active');
+    bgBlurDiv.classList.remove('active');
+  }
 
   localStorage.setItem('pekora-bg-url', url || '');
   localStorage.setItem('pekora-bg-blur', blur);
   localStorage.setItem('pekora-bg-opacity', opacity);
 }
+
 function clearCustomBackground() {
   setCustomBackground('', 0, 100);
-  document.getElementById('pekora-bg-url').value = '';
+  const bgUrl = document.getElementById('pekora-bg-url');
+  if (bgUrl) bgUrl.value = '';
+  const bgBlur = document.getElementById('pekora-bg-blur');
+  if (bgBlur) bgBlur.value = 8;
+  const bgBlurVal = document.getElementById('pekora-bg-blur-val');
+  if (bgBlurVal) bgBlurVal.innerText = 8;
+  const bgOpacity = document.getElementById('pekora-bg-opacity');
+  if (bgOpacity) bgOpacity.value = 60;
+  const bgOpacityVal = document.getElementById('pekora-bg-opacity-val');
+  if (bgOpacityVal) bgOpacityVal.innerText = 60;
   localStorage.removeItem('pekora-bg-url');
   localStorage.removeItem('pekora-bg-blur');
   localStorage.removeItem('pekora-bg-opacity');
 }
-window.addEventListener('DOMContentLoaded', () => {
-  const url = localStorage.getItem('pekora-bg-url') || '';
-  const blur = localStorage.getItem('pekora-bg-blur') || 8;
-  const opacity = localStorage.getItem('pekora-bg-opacity') || 60;
-  setCustomBackground(url, blur, opacity);
-  if (url) document.getElementById('pekora-bg-url').value = url;
-});
-document.getElementById('pekora-bg-upload').addEventListener('change', function(e) {
-  const file = e.target.files[0];
-  if (!file) return;
-  const reader = new FileReader();
-  reader.onload = function(ev) {
-    document.getElementById('pekora-bg-url').value = ev.target.result;
-  };
-  reader.readAsDataURL(file);
-});
+
+const savedUrl = localStorage.getItem('pekora-bg-url') || '';
+const savedBlur = Number(localStorage.getItem('pekora-bg-blur') || 8);
+const savedOpacity = Number(localStorage.getItem('pekora-bg-opacity') || 60);
+if (savedUrl) {
+  setCustomBackground(savedUrl, savedBlur, savedOpacity);
+}
+
+const bgTheme = document.getElementById('pekora-bg-theme');
+if (bgTheme) {
+  bgTheme.addEventListener('change', function() {
+    const val = this.value;
+    if (themePresets[val]) {
+      const preset = themePresets[val];
+      const bgUrl = document.getElementById('pekora-bg-url');
+      if (bgUrl) bgUrl.value = preset.url;
+      const bgBlur = document.getElementById('pekora-bg-blur');
+      if (bgBlur) bgBlur.value = preset.blur;
+      const bgBlurVal = document.getElementById('pekora-bg-blur-val');
+      if (bgBlurVal) bgBlurVal.innerText = preset.blur;
+      const bgOpacity = document.getElementById('pekora-bg-opacity');
+      if (bgOpacity) bgOpacity.value = preset.opacity;
+      const bgOpacityVal = document.getElementById('pekora-bg-opacity-val');
+      if (bgOpacityVal) bgOpacityVal.innerText = preset.opacity;
+    }
+  });
+}
+
+const bgUpload = document.getElementById('pekora-bg-upload');
+if (bgUpload) {
+  bgUpload.addEventListener('change', function(e) {
+    const file = e.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = function(ev) {
+      const bgUrl = document.getElementById('pekora-bg-url');
+      if (bgUrl) bgUrl.value = ev.target.result;
+    };
+    reader.readAsDataURL(file);
+  });
+}
+
 menu.addEventListener('input', function(e) {
   if (e.target && e.target.id === 'pekora-bg-blur') {
-    document.getElementById('pekora-bg-blur-val').innerText = e.target.value;
+    const bgBlurVal = document.getElementById('pekora-bg-blur-val');
+    if (bgBlurVal) bgBlurVal.innerText = e.target.value;
   }
   if (e.target && e.target.id === 'pekora-bg-opacity') {
-    document.getElementById('pekora-bg-opacity-val').innerText = e.target.value;
+    const bgOpacityVal = document.getElementById('pekora-bg-opacity-val');
+    if (bgOpacityVal) bgOpacityVal.innerText = e.target.value;
   }
 });
+
 menu.addEventListener('click', function(e) {
   if (e.target && e.target.id === 'pekora-bg-apply') {
-    const url = document.getElementById('pekora-bg-url').value;
-    const blur = document.getElementById('pekora-bg-blur').value;
-    const opacity = document.getElementById('pekora-bg-opacity').value;
-    if (url) setCustomBackground(url, blur, opacity);
-    else alert('Please enter an image URL or upload an image.');
+    const bgUrl = document.getElementById('pekora-bg-url');
+    const bgBlur = document.getElementById('pekora-bg-blur');
+    const bgOpacity = document.getElementById('pekora-bg-opacity');
+    if (bgUrl && bgBlur && bgOpacity) {
+      const url = bgUrl.value;
+      const blur = bgBlur.value;
+      const opacity = bgOpacity.value;
+      if (url) setCustomBackground(url, blur, opacity);
+      else alert('Please enter an image URL or upload an image.');
+    }
   }
   if (e.target && e.target.id === 'pekora-bg-clear') {
     clearCustomBackground();
@@ -462,12 +497,19 @@ menu.addEventListener('click', function(e) {
 const customCssStyle = document.createElement('style');
 customCssStyle.id = 'pekora-custom-css-style';
 document.head.appendChild(customCssStyle);
-document.getElementById('pekora-css-editor').value = localStorage.getItem('pekora-custom-css') || '';
-document.getElementById('pekora-css-apply').onclick = function() {
-  const css = document.getElementById('pekora-css-editor').value;
-  customCssStyle.textContent = css;
-  localStorage.setItem('pekora-custom-css', css);
-};
+
+const cssEditor = document.getElementById('pekora-css-editor');
+if (cssEditor) {
+  cssEditor.value = localStorage.getItem('pekora-custom-css') || '';
+  const cssApplyBtn = document.getElementById('pekora-css-apply');
+  if (cssApplyBtn) {
+    cssApplyBtn.onclick = function() {
+      const css = cssEditor.value;
+      customCssStyle.textContent = css;
+      localStorage.setItem('pekora-custom-css', css);
+    };
+  }
+}
 
 function startSnow() {
   const canvas = snowCanvas;
@@ -532,9 +574,7 @@ document.addEventListener('keydown', function(e) {
 });
 
 function hidePekoraAds() {
-
   document.querySelectorAll('.adImage-0-2-72').forEach(img => img.style.display = 'none');
-
   document.querySelectorAll('img[src*="thumbnails"]').forEach(img => {
     if (img.src.includes('dbb02d9e6fcf069821c00497f0807645104cd4e97e80500d4d278f87f6005ed3.png')) {
       img.style.display = 'none';
@@ -542,10 +582,10 @@ function hidePekoraAds() {
   });
 }
 menu.addEventListener('click', function(e) {
-
   if (e.target && e.target.id === 'pekora-hide-ads-btn') {
     hidePekoraAds();
   }
 });
+
 
 // MADE BY HEXERISS
